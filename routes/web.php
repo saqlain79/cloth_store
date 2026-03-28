@@ -8,6 +8,13 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\CartController;
+
+use App\Http\Controllers\HomeController;
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/shirts', [HomeController::class, 'category_products_list'])->name('category_products_list');
+Route::get('/pants', [HomeController::class, 'category_products_list'])->name('category_products_list');
 
 
 
@@ -21,6 +28,7 @@ use App\Http\Controllers\ProductImageController;
     Route::resource('users', UserController::class);
     Route::resource('variants', ProductVariantController::class);
     Route::resource('productimages', ProductImageController::class)->except(['show']);
+    Route::resource('carts', CartController::class);
 
     // Custom
     // Route::post('products/{id}/images', [ProductController::class, 'uploadImage']);

@@ -21,7 +21,10 @@ class OrderController extends Controller
 
     public function store(){}
 
-    public function edit(){}
+    public function edit()
+    {
+        
+    }
 
     public function update(Request $request, $id) {
         $order = Order::findOrFail($id);
