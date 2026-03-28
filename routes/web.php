@@ -9,9 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ProductImageController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 // Route::prefix('admin')->middleware(['auth','admin'])->group(function () {
 

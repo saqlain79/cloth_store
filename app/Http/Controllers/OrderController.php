@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
 
 class OrderController extends Controller
 {
@@ -16,9 +17,22 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    public function create(){}
+
+    public function store(){}
+
+    public function edit(){}
+
     public function update(Request $request, $id) {
         $order = Order::findOrFail($id);
         $order->update(['status' => $request->status]);
+        return back();
+    }
+
+    public function destroy($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->delete();
         return back();
     }
 }
