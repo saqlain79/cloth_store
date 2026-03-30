@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -17,18 +18,57 @@ class HomeController extends Controller
         return view('index', compact('categories'));
     }
 
-    public function category_products_list()
+    public function category_products_list(Category $category)
     {
-        // shows all the products of a category
-        $category_products = DB::table('category_products')
-            ->join('products', 'category_products.product_id', '=', 'products.id')
-            ->join('categories', 'category_products.category_id', '=', 'categories.id')
-            ->join('product_images', 'products.id', '=', 'product_images.product_id')
-            ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-            ->select('products.*', 'categories.name as category_name', 'product_images.*', 'product_variants.*')
-            ->get();
+        // first step: join products, product_images, and product_variants
+        // $productItems = DB::table('products as p')
+        //     ->join('product_images as pi', 'p.id', '=', 'pi.product_id')
+        //     ->join('product_variants as pv', 'p.id', '=', 'pv.product_id')
+        //     ->select(
+        //         'p.id as product_id',
+        //         'p.name',
+        //         'p.description',
+        //         'p.brand',
+        //         'pi.image_url',
+        //         'pv.sku',
+        //         'pv.price',
+        //         'pv.size',
+        //         'pv.color'
+        //     );
+        
+        // // second step: join categories and category_products
+        // $categoryItems = DB::table('categories as c')
+        //     ->join('category_products as cp', 'c.id', '=', 'cp.category_id')
+        //     ->select(
+        //         'cp.product_id',
+        //         'c.id as category_id',
+        //         'c.name as category_name'
+        //     );
 
-            return view('home.category_products', compact('category_products'));
+        // // third step: join the two temporary tables
+        // $category_products = DB::query()
+        //     ->fromSub($productItems, 'product_items')
+        //     ->joinSub($categoryItems, 'category_items', function ($join) {
+        //         $join->on('product_items.product_id', '=', 'category_items.product_id');
+        //     })
+        //     ->where('category_items.category_id', $category->id)
+        //     ->select(
+        //         'product_items.product_id as id',
+        //         'product_items.name',
+        //         'product_items.description',
+        //         'product_items.brand',
+        //         'product_items.image_url',
+        //         'product_items.sku',
+        //         'product_items.price',
+        //         'product_items.size',
+        //         'product_items.color',
+        //         'category_items.category_name'
+        //     )
+        //     ->get()
+        //     ->unique('product_id')
+        //     ->values();
+
+        // return view('home.category_products', compact('category_products', 'category'));
     }
 
     /**
@@ -52,7 +92,9 @@ class HomeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::with(['variants', 'images'])->findOrFail($id);
+
+        return view('home.show', compact('product'));
     }
 
     /**
