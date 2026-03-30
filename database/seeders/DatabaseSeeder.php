@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Product;
+use App\Models\ProductVariant;
+use App\Models\ProductImage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -19,7 +21,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // User::factory(1)->create();
+        Product::factory(20)->create();
+        ProductVariant::factory(20)->create();
+        ProductImage::factory(20)->create();
 
         // User::factory()->create([
         //     'name' => 'admin',
@@ -30,14 +35,14 @@ class DatabaseSeeder extends Seeder
         //     'role' => 'admin'
         // ]);
 
-        DB::table('users')->insert([
-            'name' => 'admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('12345678'),
-            'phone' => '1234567890',
-            'address' => '123 admin street',
-            'role' => 'admin'
-        ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin',
+        //     'email' => 'admin@admin.com',
+        //     'password' => Hash::make('12345678'),
+        //     'phone' => '1234567890',
+        //     'address' => '123 admin street',
+        //     'role' => 'admin'
+        // ]);
 
         
 

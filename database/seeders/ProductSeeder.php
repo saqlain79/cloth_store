@@ -23,6 +23,6 @@ class ProductSeeder extends Seeder
         //     'brand' => str::random(5),
         //     'is_active' => true
         // ]);
-        Product::factory(20)->create();
+        // Product::factory(20)->create();
     }
 }
