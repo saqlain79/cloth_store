@@ -156,6 +156,9 @@
                         <a class="nav-link" href="#features">Why choose us</a>
                     </li>
                     @if(Auth::check())
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="#">Cart</a>
+                        </li>
                         <div class="dropdown">
                             <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ Auth::user()->name }}

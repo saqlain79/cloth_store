@@ -53,32 +53,35 @@
                 @endphp
 
                 @if($selectedVariant)
-                    <div class="mb-4">
-                        <div class="d-flex flex-wrap gap-3 mb-3">
-                            <span class="product-pill px-3 py-2 rounded-pill">Price: TK {{ number_format($selectedVariant->price, 0) }}</span>
-                            <span class="product-pill px-3 py-2 rounded-pill">SKU: {{ $selectedVariant->sku }}</span>
-                            <span class="product-pill px-3 py-2 rounded-pill">Stock: {{ $selectedVariant->stock ?? 'N/A' }}</span>
-                        </div>
+                    <form action="{{ route('cart.add', ['product_id' => $product->id]) }}" method="POST">
+                        @csrf
 
                         <div class="mb-4">
-                            <label for="variant_id" class="form-label text-muted">Choose variant</label>
-                            <select id="variant_id" name="variant_id" class="form-select bg-slate-900 text-white border-0">
-                                @foreach($product->variants as $variant)
-                                    <option value="{{ $variant->id }}">
-                                        {{ $variant->color ?: 'Default' }}@if($variant->size) • {{ $variant->size }}@endif
-                                    </option>
-                                @endforeach
-                            </select>
+                            <div class="d-flex flex-wrap gap-3 mb-3">
+                                <span class="product-pill px-3 py-2 rounded-pill">Price: TK {{ number_format($selectedVariant->price, 0) }}</span>
+                                <span class="product-pill px-3 py-2 rounded-pill">SKU: {{ $selectedVariant->sku }}</span>
+                                <span class="product-pill px-3 py-2 rounded-pill">Stock: {{ $selectedVariant->stock ?? 'N/A' }}</span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="product_variant_id" class="form-label text-muted">Choose variant</label>
+                                <select id="product_variant_id" name="product_variant_id" class="form-select bg-slate-900 text-white border-0">
+                                    @foreach($product->variants as $variant)
+                                        <option value="{{ $variant->id }}">
+                                            {{ $variant->color ?: 'Default' }}@if($variant->size) • {{ $variant->size }}@endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="d-flex flex-wrap gap-3">
+                            <button type="submit" class="btn btn-outline-dark btn-lg px-5">Add to Cart</button>
+                        </div>
+                    </form>
                 @else
                     <div class="alert alert-secondary">No variants are available for this product.</div>
                 @endif
-
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="#" class="btn btn-accent btn-lg px-5">Add to cart</a>
-                    <a href="#" class="btn btn-outline-dark btn-lg px-5">Buy now</a>
-                </div>
 
                 <div class="mt-5 p-4 card card-surface border-0 shadow-sm">
                     <h5 class="mb-3">Description</h5>
