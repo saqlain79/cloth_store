@@ -7,28 +7,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            color-scheme: dark;
+            color-scheme: light;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            --bg: #dfe8ff;
-            --surface: #111827;
-            --surface-strong: #1f2937;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --accent: #22d3ee;
-            --accent-dark: #0e7490;
-            --border: rgba(148, 163, 184, 0.18);
+            --bg: #eff6ff;
+            --surface: #ffffff;
+            --surface-strong: #f8fafc;
+            --text: #0f172a;
+            --muted: #475569;
+            --accent: #6366f1;
+            --accent-dark: #4f46e5;
+            --accent-alt: #10b981;
+            --border: rgba(148, 163, 184, 0.24);
         }
 
         body {
-            /* background: linear-gradient(180deg, #050a1a 0%, #071023 100%); */
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
         }
 
         .navbar {
-            background: rgba(15, 23, 42, 0.96);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(18px);
+            box-shadow: 0 1px 20px rgba(148, 163, 184, 0.12);
             position: sticky;
             top: 0;
             z-index: 1040;
@@ -38,85 +39,81 @@
             position: sticky;
             top: 72px;
             z-index: 1030;
-            background: rgba(15, 23, 42, 0.94);
-            border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+            background: #4f46e5;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.15);
             backdrop-filter: blur(18px);
         }
 
         .secondary-nav .nav-link {
-            color: var(--muted) !important;
+            color: var(--bg) !important;
             font-size: 0.95rem;
         }
 
         .secondary-nav .nav-link:hover,
         .secondary-nav .nav-link.active {
-            color: #ffffff !important;
-        }
-
-        .navbar {
-            background: rgba(15, 23, 42, 0.96);
-            backdrop-filter: blur(18px);
+            color: var(--text) !important;
         }
 
         .nav-link {
-            color: var(--muted) !important;
+            color: var(--text) !important;
         }
 
         .nav-link:hover,
         .navbar-brand,
         .navbar-nav .nav-link.active {
-            color: #ffffff !important;
+            color: var(--accent-dark) !important;
         }
 
         .hero-gradient {
-            background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.18), transparent 28%),
-                        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.15), transparent 30%),
-                        linear-gradient(180deg, rgba(15,23,42,0.96) 0%, rgba(15,23,42,0.98) 100%);
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.16), transparent 28%),
+                        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.14), transparent 30%),
+                        linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(226, 232, 255, 1) 100%);
             border: 1px solid var(--border);
         }
 
         .card-surface {
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: var(--surface);
+            border: 1px solid rgba(148, 163, 184, 0.22);
             color: var(--text);
         }
 
         .card-surface .card-title {
-            color: #ffffff;
+            color: var(--text);
         }
 
         .badge-soft {
-            background: rgba(34, 211, 238, 0.16);
-            color: #c7f0ff;
+            background: rgba(99, 102, 241, 0.12);
+            color: #4338ca;
         }
 
         .btn-accent {
-            background: #22d3ee;
-            color: #0f172a;
+            background: var(--accent);
+            color: #ffffff;
             border: none;
         }
 
         .btn-accent:hover {
-            background: #38bdf8;
-            color: #0f172a;
+            background: var(--accent-dark);
+            color: #ffffff;
         }
 
         .text-accent {
-            color: #22d3ee !important;
+            color: var(--accent) !important;
         }
 
         .bg-slate-900 {
-            background: #0f172a !important;
+            background: #eef2ff !important;
+            color: var(--text) !important;
         }
 
         .product-pill {
-            background: rgba(148, 163, 184, 0.14);
-            color: #cbd5e1;
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            background: rgba(16, 185, 129, 0.12);
+            color: #065f46;
+            border: 1px solid rgba(16, 185, 129, 0.18);
         }
 
         .footer-note {
-            color: var(--muted);
+            color: #64748b;
         }
 
         .site-footer {
@@ -158,15 +155,34 @@
                     <li class="nav-item me-3">
                         <a class="nav-link" href="#features">Why choose us</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="btn btn-accent px-4" href="{{ route('home') }}">Shop Now</a>
-                    </li>
+                    @if(Auth::check())
+                        <div class="dropdown">
+                            <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ Auth::user()->name }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{{ route('home') }}">My Account</a></li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
+                            </ul>
+                        </div>
+                    @else
+                        <li class="nav-item me-3">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                        </li>
+                    @endif
+                    
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="secondary-nav px-4 py-2 mb-4">
+    <div class="secondary-nav px-4 py-2 mb-4 shadow-sm">
         <div class="container-fluid d-flex flex-wrap align-items-center gap-2">
             <div class="dropdown">
                 <a class="btn btn-sm btn-outline-light dropdown-toggle" href="#" role="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -226,5 +242,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

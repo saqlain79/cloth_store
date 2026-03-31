@@ -1,11 +1,39 @@
 @extends('home.app')
 @section('content')
-    <section class="py-5">
+    <section class="py-2">
+        <div class="d-flex align-items-center fs-6 pb-4">
+            <ion-icon name="home-outline" size="small px-1"></ion-icon>
+            <a href="{{ route('home') }}" class="text-muted text-decoration-none px-1">Home /</a>
+            <p class="mb-0 px-1 text-muted">{{ $product->name }}</p>
+        </div>
         <div class="row g-5 align-items-center">
             <div class="col-lg-6">
-                <div class="card card-surface border-0 shadow-lg overflow-hidden">
+                <div class="card card-surface border-0 shadow-lg overflow-hidden" style="max-height: 600px; max-width: 600px; margin: auto;">
                     @if($product->images->isNotEmpty())
-                        <img src="{{ asset('/' . $product->images->first()->image_url) }}" class="img-fluid" alt="{{ $product->name }}" style="object-fit: cover; width: 100%; height: 520px;">
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                @foreach($product->images as $index => $image)
+                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
+                                @endforeach
+                            </div>
+                            <div class="carousel-inner">
+                                @foreach($product->images as $index => $image)
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <img src="{{ asset('/' . $image->image_url) }}" class="img-fluid" alt="{{ $product->name }} image {{ $index + 1 }}" style="object-fit: fill; height: 600px; width: 600px;">
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if($product->images->count() > 1)
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            @endif
+                        </div>
                     @else
                         <div class="d-flex align-items-center justify-content-center" style="height:520px; background: rgba(148, 163, 184, 0.08);">
                             <span class="text-muted">Product image unavailable</span>
@@ -18,7 +46,6 @@
                 <div class="mb-4">
                     <span class="badge-soft px-3 py-2">{{ $product->brand ?: 'Tech Gear' }}</span>
                     <h1 class="fw-bold mt-3">{{ $product->name }}</h1>
-                    <p class="text-muted">{{ $product->description }}</p>
                 </div>
 
                 @php
@@ -50,19 +77,13 @@
 
                 <div class="d-flex flex-wrap gap-3">
                     <a href="#" class="btn btn-accent btn-lg px-5">Add to cart</a>
-                    <a href="#" class="btn btn-outline-light btn-lg px-5">Buy now</a>
+                    <a href="#" class="btn btn-outline-dark btn-lg px-5">Buy now</a>
                 </div>
 
                 <div class="mt-5 p-4 card card-surface border-0 shadow-sm">
-                    <h5 class="mb-3">Why this setup works</h5>
-                    <ul class="list-unstyled mb-0 text-muted">
-                        <li class="mb-2">• Precision-crafted peripherals for speed and control.</li>
-                        <li class="mb-2">• Premium materials tuned for long sessions.</li>
-                        <li class="mb-2">• Designed to fit the modern desk and RGB rig.</li>
-                    </ul>
+                    <h5 class="mb-3">Description</h5>
+                    <p>{{$product->description}}</p>
                 </div>
-
-                <a href="{{ route('home') }}" class="btn btn-link text-muted mt-4">Back to store</a>
             </div>
         </div>
     </section>
