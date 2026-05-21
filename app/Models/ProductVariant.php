@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductVariant extends Model
 {
-    protected $fillable = ['product_id','sku','price','stock','size','color'];
+    use HasFactory;
 
-    public function product() {
+    protected $fillable = ['product_id', 'sku', 'price', 'stock', 'size', 'color'];
+
+    public function product()
+    {
         return $this->belongsTo(Product::class);
     }
 }

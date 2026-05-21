@@ -15,7 +15,11 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+        $cartItems = CartItem::with(['variant.product.images'])->where('cart_id', $cart->id)->get();
+
+        return view('home.cart', compact('cartItems'));
     }
 
     public function add(Request $request)
@@ -49,7 +53,57 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Product added to cart!');
+        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
+    }
+
+    public function update(Request $request, $productVariantId)
+    {
+        $request->validate([
+            'quantity' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->first();
+
+        if ($cart) {
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_variant_id', $productVariantId)
+                ->first();
+
+            if ($cartItem) {
+                $variant = ProductVariant::find($productVariantId);
+                if ($variant && $variant->stock < $request->quantity) {
+                    return redirect()->back()->with('error', 'Only '.$variant->stock.' items in stock.');
+                }
+
+                $cartItem->quantity = $request->quantity;
+                $cartItem->save();
+
+                return redirect()->route('cart.index')->with('success', 'Cart updated successfully.');
+            }
+        }
+
+        return redirect()->route('cart.index')->with('error', 'Item not found in cart.');
+    }
+
+    public function remove($productVariantId)
+    {
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->first();
+
+        if ($cart) {
+            $cartItem = CartItem::where('cart_id', $cart->id)
+                ->where('product_variant_id', $productVariantId)
+                ->first();
+
+            if ($cartItem) {
+                $cartItem->delete();
+
+                return redirect()->route('cart.index')->with('success', 'Item removed from cart.');
+            }
+        }
+
+        return redirect()->route('cart.index')->with('error', 'Item not found in cart.');
     }
 
     /**
@@ -80,14 +134,6 @@ class CartController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Cart $cart)
     {
         //
     }
