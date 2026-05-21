@@ -15,11 +15,22 @@ class CartController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-        $cartItems = CartItem::with(['variant.product.images'])->where('cart_id', $cart->id)->get();
+        if (! Auth::check()) {
+            return redirect()->route('login');
+        }
 
-        return view('home.cart', compact('cartItems'));
+        $user = Auth::user();
+        $cart = Cart::where('user_id', $user->id)->first();
+
+        if ($cart) {
+            $cartItems = CartItem::where('cart_id', $cart->id)
+                ->with('variant.product')
+                ->get();
+
+            return view('home.cart', ['cartItems' => $cartItems]);
+        }
+
+        return view('home.cart', ['cartItems' => []]);
     }
 
     public function add(Request $request)
@@ -53,7 +64,7 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
+        return redirect()->back()->with('success', 'Product added to cart!');
     }
 
     public function update(Request $request, $productVariantId)

@@ -9,7 +9,7 @@
         <p class="mb-0 px-1 text-muted">Shopping Cart</p>
     </div>
 
-    <h1 class="display-6 fw-bold mb-4 text-text">Your Shopping Cart</h1>
+    <h2 class="display-10 fw-bold mb-4 text-text">Shopping Cart</h2>
 
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert" style="background: rgba(16, 185, 129, 0.12); color: #065f46;">
@@ -24,6 +24,18 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 2000); // 2 seconds
+            });
+        });
+    </script>
 
     @if($cartItems->isEmpty())
         <div class="card card-surface border-0 shadow p-5 text-center my-5">

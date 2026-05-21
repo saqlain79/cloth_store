@@ -52,11 +52,11 @@
 
         <div class="row gy-4">
             @foreach($categories as $category)
-                <div class="col-sm-6 col-lg-2">
+                <div class="col-sm-6 col-lg-3">
                     <a href="{{ route('category_products_list', ['category' => $category->id]) }}" class="text-decoration-none">
                         <div class="card card-surface h-100 shadow px-3 py-4 border-0">
                             <div class="mb-3">
-                                <span class="badge-soft px-3 py-2 rounded-pill">{{ strtoupper(substr($category->name, 0, 2)) }}</span>
+                                <span class="badge-soft px-3 py-2 rounded-pill">{{ $category->name }}</span>
                             </div>
                             <h3 class="h5 text-white">{{ $category->name }}</h3>
                             <p class="text-text">Browse the latest {{ strtolower($category->name) }} and accessories.</p>

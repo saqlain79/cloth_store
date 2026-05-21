@@ -6,36 +6,73 @@
             <a href="{{ route('home') }}" class="text-muted text-decoration-none px-1">Home /</a>
             <p class="mb-0 px-1 text-muted">{{ $product->name }}</p>
         </div>
+        <div>
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" role="alert"
+                    style="background: rgba(16, 185, 129, 0.12); color: #065f46;">
+                    <strong>Success!</strong> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" role="alert"
+                    style="background: rgba(239, 68, 68, 0.12); color: #991b1b;">
+                    <strong>Error!</strong> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    setTimeout(() => {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 2000); // 2 seconds
+                });
+            });
+        </script>
         <div class="row g-5 align-items-center">
             <div class="col-lg-6">
-                <div class="card card-surface border-0 shadow-lg overflow-hidden" style="max-height: 600px; max-width: 600px; margin: auto;">
-                    @if($product->images->isNotEmpty())
+                <div class="card card-surface border-0 shadow-lg overflow-hidden"
+                    style="max-height: 600px; max-width: 600px; margin: auto;">
+                    @if ($product->images->isNotEmpty())
                         <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-indicators">
-                                @foreach($product->images as $index => $image)
-                                    <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
+                                @foreach ($product->images as $index => $image)
+                                    <button type="button" data-bs-target="#productCarousel"
+                                        data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}"
+                                        aria-current="{{ $index === 0 ? 'true' : 'false' }}"
+                                        aria-label="Slide {{ $index + 1 }}"></button>
                                 @endforeach
                             </div>
                             <div class="carousel-inner">
-                                @foreach($product->images as $index => $image)
+                                @foreach ($product->images as $index => $image)
                                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                        <img src="{{ asset('/' . $image->image_url) }}" class="img-fluid" alt="{{ $product->name }} image {{ $index + 1 }}" style="object-fit: fill; height: 600px; width: 600px;">
+                                        <img src="{{ asset('/' . $image->image_url) }}" class="img-fluid"
+                                            alt="{{ $product->name }} image {{ $index + 1 }}"
+                                            style="object-fit: fill; height: 600px; width: 600px;">
                                     </div>
                                 @endforeach
                             </div>
-                            @if($product->images->count() > 1)
-                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            @if ($product->images->count() > 1)
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
+                                    data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
                                 </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
+                                    data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Next</span>
                                 </button>
                             @endif
                         </div>
                     @else
-                        <div class="d-flex align-items-center justify-content-center" style="height:520px; background: rgba(148, 163, 184, 0.08);">
+                        <div class="d-flex align-items-center justify-content-center"
+                            style="height:520px; background: rgba(148, 163, 184, 0.08);">
                             <span class="text-muted">Product image unavailable</span>
                         </div>
                     @endif
@@ -52,23 +89,28 @@
                     $selectedVariant = $product->variants->first();
                 @endphp
 
-                @if($selectedVariant)
+                @if ($selectedVariant)
                     <form action="{{ route('cart.add', ['product_id' => $product->id]) }}" method="POST">
                         @csrf
 
                         <div class="mb-4">
                             <div class="d-flex flex-wrap gap-3 mb-3">
-                                <span class="product-pill px-3 py-2 rounded-pill">Price: TK {{ number_format($selectedVariant->price, 0) }}</span>
+                                <span class="product-pill px-3 py-2 rounded-pill">Price: TK
+                                    {{ number_format($selectedVariant->price, 0) }}</span>
                                 <span class="product-pill px-3 py-2 rounded-pill">SKU: {{ $selectedVariant->sku }}</span>
-                                <span class="product-pill px-3 py-2 rounded-pill">Stock: {{ $selectedVariant->stock ?? 'N/A' }}</span>
+                                <span class="product-pill px-3 py-2 rounded-pill">Stock:
+                                    {{ $selectedVariant->stock ?? 'N/A' }}</span>
                             </div>
 
                             <div class="mb-4">
                                 <label for="product_variant_id" class="form-label text-muted">Choose variant</label>
-                                <select id="product_variant_id" name="product_variant_id" class="form-select bg-slate-900 text-white border-0">
-                                    @foreach($product->variants as $variant)
+                                <select id="product_variant_id" name="product_variant_id"
+                                    class="form-select bg-slate-900 text-white border-0">
+                                    @foreach ($product->variants as $variant)
                                         <option value="{{ $variant->id }}">
-                                            {{ $variant->color ?: 'Default' }}@if($variant->size) • {{ $variant->size }}@endif
+                                            {{ $variant->color ?: 'Default' }}@if ($variant->size)
+                                                • {{ $variant->size }}
+                                            @endif
                                         </option>
                                     @endforeach
                                 </select>
@@ -85,7 +127,7 @@
 
                 <div class="mt-5 p-4 card card-surface border-0 shadow-sm">
                     <h5 class="mb-3">Description</h5>
-                    <p>{{$product->description}}</p>
+                    <p>{{ $product->description }}</p>
                 </div>
             </div>
         </div>
